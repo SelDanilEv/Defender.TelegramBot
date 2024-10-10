@@ -1,0 +1,11 @@
+# version: "3.8"
+services:
+  local-telegram-bot:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    # restart: always
+    image: local-telegram-bot
+    container_name: LocalTelegramBot
+    env_file:
+      - .env.local
