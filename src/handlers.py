@@ -22,8 +22,8 @@ def register_handlers(bot):
     @bot.message_handler(func=lambda message: message.text == 'Check')
     def check(message):
         chat_id = message.chat.id
-        fetch_data()
-        bot.reply_to(message, 'Force check completed!')
+        if not fetch_data():
+            bot.reply_to(message, 'There is no free slots!')
 
     @bot.message_handler(func=lambda message: message.text == 'Unsubscribe')
     def unsubscribe(message):

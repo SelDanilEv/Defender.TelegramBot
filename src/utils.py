@@ -43,6 +43,9 @@ def fetch_data():
                 notify_subscribers(filtered_data)
     except requests.RequestException as e:
         logger.error(f'Error fetching data: {e}')
+        return False
+
+    return bool(filtered_data)
 
 def notify_subscribers(data):
     for chat_id in get_subscribers():
