@@ -4,6 +4,8 @@ from datetime import datetime
 from config import SERVICE_URL, HEADERS, IS_TEST_MODE, logger
 from database import get_subscribers
 from bot_instance import bot
+from database import add_to_cache
+
 
 employee_id = 5
 employee_id_str = str(employee_id)
@@ -55,3 +57,5 @@ def notify_subscribers(data):
             logger.info(f'Notification sent to {chat_id}')
         except Exception as e:
             logger.error(f'Error sending message to {chat_id}: {e}')
+    add_to_cache(data)
+    

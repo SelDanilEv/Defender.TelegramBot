@@ -3,7 +3,7 @@ import time
 from utils import fetch_data
 
 def start_scheduler():
-    schedule.every(10).minutes.do(fetch_data)
+    schedule.every(1).minutes.do(fetch_data)
 
     while True:
         schedule.run_pending()

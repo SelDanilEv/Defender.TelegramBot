@@ -5,6 +5,7 @@ from config import logger
 client = MongoClient(MONGO_URI)
 db = client['local_Defender_TelegramBot']
 subscribers_collection = db['subscribers']
+cache_collection = db['cache']
 
 def get_subscribers():
     return [sub['chat_id'] for sub in subscribers_collection.find()]
@@ -17,3 +18,7 @@ def add_subscriber(chat_id):
 def remove_subscriber(chat_id):
     subscribers_collection.delete_one({'chat_id': chat_id})
     logger.info(f'Unsubscribed: {chat_id}')
+    
+def add_to_cache(response):
+    cache_collection.insert_one(response)
+    logger.info(f'Cache added')
