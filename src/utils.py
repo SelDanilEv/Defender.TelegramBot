@@ -2,7 +2,7 @@ import random
 import requests
 from datetime import datetime
 from config import SERVICE_URL, HEADERS, IS_TEST_MODE, logger
-from database import get_subscribers
+from database import get_active_subscribers
 from bot_instance import bot
 from database import add_to_cache
 
@@ -28,6 +28,10 @@ def fetch_data():
         'customer_time_zone': 'Europe/Warsaw'
     }
     try:
+        if len(get_active_subscribers()) == 0:
+            logger.info('No active subscribers')
+            return False
+
         response = requests.get(SERVICE_URL, headers=HEADERS, params=params)
         response.raise_for_status()
         data = response.json()
@@ -50,12 +54,12 @@ def fetch_data():
     return bool(filtered_data)
 
 def notify_subscribers(data):
-    for chat_id in get_subscribers():
+    for activeUser in get_active_subscribers():
         try:
             message = "Available slots:\n" + "\n".join([f"{date}: {len(slots)} slots" for date, slots in data.items()])
-            bot.send_message(chat_id, message)
-            logger.info(f'Notification sent to {chat_id}')
+            bot.send_message(activeUser.chat_id, message)
+            logger.info(f'Notification sent to {activeUser.chat_id}')
         except Exception as e:
-            logger.error(f'Error sending message to {chat_id}: {e}')
+            logger.error(f'Error sending message to {activeUser.chat_id}: {e}')
     add_to_cache(data)
     
